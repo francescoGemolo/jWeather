@@ -1,0 +1,9 @@
+.DS_Store
+build/
+DerivedData/
+*.xcarchive
+*.dmg
+*.zip
+xcuserdata/
+*.xcuserstate
+.swiftpm/
