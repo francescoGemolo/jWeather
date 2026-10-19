@@ -1,0 +1,40 @@
+{
+  "fill": {
+    "linear-gradient": [
+      "srgb:1.00000,1.00000,1.00000,1.00000",
+      "srgb:1.00000,0.57811,0.00000,1.00000"
+    ]
+  },
+  "groups": [
+    {
+      "blur-material": 0.8,
+      "layers": [
+        {
+          "image-name": "cat_5.png",
+          "name": "cat_5",
+          "position": {
+            "scale": 0.6,
+            "translation-in-points": [
+              8.400000000000091,
+              -51.59999999999991
+            ]
+          }
+        }
+      ],
+      "shadow": {
+        "kind": "layer-color",
+        "opacity": 0.6
+      },
+      "translucency": {
+        "enabled": true,
+        "value": 0.3
+      }
+    }
+  ],
+  "supported-platforms": {
+    "circles": [
+      "watchOS"
+    ],
+    "squares": "shared"
+  }
+}
