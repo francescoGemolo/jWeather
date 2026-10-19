@@ -1,67 +1,88 @@
 # jWeather
 
-App meteo per macOS: icona nella barra dei menu e widget a comparsa. SwiftUI, nessuna dipendenza esterna, dati da [Open-Meteo](https://open-meteo.com).
+App meteo per macOS con icona nella barra dei menu e widget a comparsa. Realizzata con SwiftUI, senza dipendenze esterne, utilizza i dati di [Open-Meteo](https://open-meteo.com).
 
-- App standard: compare in Applicazioni e nel Dock; all'avvio apre subito il widget (anche cliccando di nuovo l'icona).
-- Città predefinite alla prima installazione: Viterbo e Ferrara.
-- Switch °C/°F e pulsante di chiusura nel widget.
-- Clic destro sul widget (o sull'icona nella barra dei menu): **Aggiorna ora** e **Strumenti di test**. Il clic sinistro non esegue azioni.
-- Animazioni distinte per sereno, nuvoloso, nebbia, pioggia, neve e temporale, con varianti giorno/notte e tre intensità. Rispettano «Riduci movimento».
+## Funzionalità
 
-## Strumenti di test
-
-Dal menu del clic destro → **Strumenti di test** si apre un pannello dentro il widget. Scegli meteo, intensità, giorno o notte e rete (online, offline, errore): il widget si aggiorna subito, senza chiudersi. «Reale» riporta ai dati veri. La simulazione non viene mai salvata.
+- Previsioni meteo tramite Open-Meteo.
+- Widget a comparsa accessibile dalla barra dei menu.
+- Visualizzazione delle condizioni meteorologiche con animazioni atmosferiche.
+- Animazioni per cielo sereno, nuvoloso, nebbia, pioggia, neve e temporali, con varianti giorno/notte e diverse intensità.
+- Supporto per la preferenza di sistema «Riduci movimento».
+- Possibilità di passare da Celsius a Fahrenheit.
+- Aggiornamento manuale delle condizioni meteorologiche.
+- Interfaccia nativa per macOS, realizzata interamente con SwiftUI.
 
 ## Requisiti
 
-macOS 14+ e Xcode 26 (l'icona è un file Icon Composer).
+- macOS 14 o successivo.
+- Xcode 26.
 
-## Avvio
+## Installazione e avvio
 
-1. Apri `jWeather.xcodeproj`.
-2. Schema **jWeather**, destinazione *My Mac*. La firma è «Sign to Run Locally»: non serve alcun account.
-3. ⌘R.
+### Compilare da Xcode
 
-Il Bundle Identifier è `com.jami.jWeather`: cambialo con il tuo in *Signing & Capabilities* se usi un account sviluppatore.
+1. Apri `jWeather.xcodeproj` con Xcode.
+2. Seleziona lo schema **jWeather** e la destinazione **My Mac**.
+3. Configura la firma del progetto con **Sign to Run Locally** oppure con il tuo account sviluppatore.
+4. Premi **⌘R** per compilare ed eseguire l'applicazione.
 
-## Distribuire un .dmg
+Il Bundle Identifier predefinito è `com.jami.jWeather`. Puoi modificarlo nelle impostazioni **Signing & Capabilities** del progetto.
+
+## Distribuzione
+
+Per creare un file DMG distribuibile, esegui dalla directory principale del progetto:
 
 ```bash
 ./scripts/make-dmg.sh
 ```
 
-Crea `build/jWeather.dmg` (build Release firmata ad-hoc). Caricalo in *Releases* su GitHub.
+Lo script genera `build/jWeather.dmg` con una build Release firmata ad hoc.
 
-Senza notarizzazione macOS blocca la prima apertura: l'utente deve fare clic destro → Apri, oppure `xattr -dr com.apple.quarantine /Applications/jWeather.app`.
+### Notarizzazione
 
-Per un'app notarizzata servono un account Apple Developer e un certificato Developer ID:
+Per distribuire una versione notarizzata sono necessari un account Apple Developer e un certificato Developer ID.
+
+Configura le variabili d'ambiente con la tua identità di firma e il tuo Team ID:
 
 ```bash
-export SIGN_IDENTITY="Developer ID Application: Nome (TEAMID)" TEAM_ID=TEAMID
+export SIGN_IDENTITY="Developer ID Application: Nome (TEAMID)"
+export TEAM_ID="TEAMID"
+```
+
+Crea il DMG e invialo ad Apple per la notarizzazione:
+
+```bash
 ./scripts/make-dmg.sh
 xcrun notarytool submit build/jWeather.dmg --keychain-profile jWeather-notary --wait
 xcrun stapler staple build/jWeather.dmg
 ```
 
-(Il profilo si crea una volta con `xcrun notarytool store-credentials jWeather-notary`.)
-
-## Struttura
-
-```
-jWeather/
-  App/        avvio, menu, barra dei menu, pannello
-  Model/      store, condizioni, giorno/notte, simulazione
-  Services/   Open-Meteo, geocoding, città, cache
-  Messages/   testi e scelta delle frasi
-  Theme/      palette animabile e superfici
-  Views/      interfaccia
-  Effects/    animazioni atmosferiche
-  Resources/  asset, icona, Info.plist, entitlements
-scripts/      make-dmg.sh
-```
-
-## Git
+Il profilo `jWeather-notary` deve essere configurato in precedenza tramite:
 
 ```bash
-git init && git add . && git commit -m "jWeather"
+xcrun notarytool store-credentials jWeather-notary
 ```
+
+Senza notarizzazione, macOS potrebbe bloccare la prima apertura dell'applicazione a causa delle restrizioni di sicurezza di Gatekeeper.
+
+## Struttura del progetto
+
+```text
+jWeather/
+  App/        Avvio dell'app, menu e barra dei menu
+  Model/      Stato, condizioni meteo e logica applicativa
+  Services/   Open-Meteo, geocoding, città e cache
+  Messages/   Testi e messaggi dell'interfaccia
+  Theme/      Palette e superfici dell'interfaccia
+  Views/      Componenti dell'interfaccia SwiftUI
+  Effects/    Animazioni atmosferiche
+  Resources/  Asset, icona, Info.plist ed entitlements
+scripts/      Script per la creazione del DMG
+```
+
+## Crediti
+
+I dati meteorologici sono forniti da [Open-Meteo](https://open-meteo.com/).
+
+Realizzato con Swift e SwiftUI per macOS.
